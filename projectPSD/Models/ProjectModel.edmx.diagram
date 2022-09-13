@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="98d73332257e4470a6217b7757114f69" Name="Diagram1" ZoomLevel="59">
+        <EntityTypeShape EntityType="projectDBModel.cart" Width="1.5" PointX="3" PointY="0.75" />
+        <EntityTypeShape EntityType="projectDBModel.payment" Width="1.5" PointX="3.125" PointY="7" />
+        <EntityTypeShape EntityType="projectDBModel.product_brands" Width="1.5" PointX="6" PointY="6.25" />
+        <EntityTypeShape EntityType="projectDBModel.transaction_details" Width="1.5" PointX="5.25" PointY="3.5" />
+        <EntityTypeShape EntityType="projectDBModel.transaction" Width="1.5" PointX="3" PointY="3.5" />
+        <EntityTypeShape EntityType="projectDBModel.user" Width="1.5" PointX="0.875" PointY="3.625" />
+        <AssociationConnector Association="projectDBModel.FK_carts_users" />
+        <AssociationConnector Association="projectDBModel.FK_transactions_payments" />
+        <AssociationConnector Association="projectDBModel.FK_transaction_details_transactons" />
+        <AssociationConnector Association="projectDBModel.FK_transactions_users" />
+        <EntityTypeShape EntityType="projectDBModel.product" Width="1.5" PointX="8.25" PointY="3.625" />
+        <AssociationConnector Association="projectDBModel.FK_carts_products" />
+        <AssociationConnector Association="projectDBModel.FK_products_product_brands" />
+        <AssociationConnector Association="projectDBModel.FK_transaction_details_products" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

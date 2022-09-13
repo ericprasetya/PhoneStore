@@ -1,0 +1,12 @@
+﻿.headline-image {
+    width: 70%;
+    transition: 0.3s;
+}
+
+.headline:hover .headline-image {
+    transform: scale(1.2);
+}
+
+.nav-link.loginBtn:hover {
+    color: #F8F9FA
+}

@@ -1,0 +1,503 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="projectDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="carts">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="user_id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="product_id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="payments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="product_brands">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="products">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="price" Type="int" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="product_brand_id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="image" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="transaction_details">
+          <Key>
+            <PropertyRef Name="transaction_id" />
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="transaction_id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="product_id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="transactions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="user_id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="transaction_date" Type="date" Nullable="false" />
+          <Property Name="payment_id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="status" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="address" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="assurance" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="isAdmin" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_carts_products">
+          <End Role="products" Type="Self.products" Multiplicity="1" />
+          <End Role="carts" Type="Self.carts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="carts">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_carts_users">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="carts" Type="Self.carts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="carts">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_products_product_brands">
+          <End Role="product_brands" Type="Self.product_brands" Multiplicity="1" />
+          <End Role="products" Type="Self.products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product_brands">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="products">
+              <PropertyRef Name="product_brand_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaction_details_products">
+          <End Role="products" Type="Self.products" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="transaction_details" Type="Self.transaction_details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="transaction_details">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaction_details_transactons">
+          <End Role="transactions" Type="Self.transactions" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="transaction_details" Type="Self.transaction_details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="transactions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="transaction_details">
+              <PropertyRef Name="transaction_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transactions_payments">
+          <End Role="payments" Type="Self.payments" Multiplicity="1" />
+          <End Role="transactions" Type="Self.transactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="payments">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="transactions">
+              <PropertyRef Name="payment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transactions_users">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="transactions" Type="Self.transactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="transactions">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="projectDBModelStoreContainer">
+          <EntitySet Name="carts" EntityType="Self.carts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="payments" EntityType="Self.payments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="product_brands" EntityType="Self.product_brands" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="products" EntityType="Self.products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="transaction_details" EntityType="Self.transaction_details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="transactions" EntityType="Self.transactions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_carts_products" Association="Self.FK_carts_products">
+            <End Role="products" EntitySet="products" />
+            <End Role="carts" EntitySet="carts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_carts_users" Association="Self.FK_carts_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="carts" EntitySet="carts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_products_product_brands" Association="Self.FK_products_product_brands">
+            <End Role="product_brands" EntitySet="product_brands" />
+            <End Role="products" EntitySet="products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaction_details_products" Association="Self.FK_transaction_details_products">
+            <End Role="products" EntitySet="products" />
+            <End Role="transaction_details" EntitySet="transaction_details" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaction_details_transactons" Association="Self.FK_transaction_details_transactons">
+            <End Role="transactions" EntitySet="transactions" />
+            <End Role="transaction_details" EntitySet="transaction_details" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transactions_payments" Association="Self.FK_transactions_payments">
+            <End Role="payments" EntitySet="payments" />
+            <End Role="transactions" EntitySet="transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transactions_users" Association="Self.FK_transactions_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="transactions" EntitySet="transactions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="projectDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="projectDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="carts" EntityType="projectDBModel.cart" />
+          <EntitySet Name="payments" EntityType="projectDBModel.payment" />
+          <EntitySet Name="product_brands" EntityType="projectDBModel.product_brands" />
+          <EntitySet Name="transaction_details" EntityType="projectDBModel.transaction_details" />
+          <EntitySet Name="transactions" EntityType="projectDBModel.transaction" />
+          <EntitySet Name="users" EntityType="projectDBModel.user" />
+          <AssociationSet Name="FK_carts_users" Association="projectDBModel.FK_carts_users">
+            <End Role="user" EntitySet="users" />
+            <End Role="cart" EntitySet="carts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transactions_payments" Association="projectDBModel.FK_transactions_payments">
+            <End Role="payment" EntitySet="payments" />
+            <End Role="transaction" EntitySet="transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaction_details_transactons" Association="projectDBModel.FK_transaction_details_transactons">
+            <End Role="transaction" EntitySet="transactions" />
+            <End Role="transaction_details" EntitySet="transaction_details" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transactions_users" Association="projectDBModel.FK_transactions_users">
+            <End Role="user" EntitySet="users" />
+            <End Role="transaction" EntitySet="transactions" />
+          </AssociationSet>
+          <EntitySet Name="products" EntityType="projectDBModel.product" />
+          <AssociationSet Name="FK_carts_products" Association="projectDBModel.FK_carts_products">
+            <End Role="product" EntitySet="products" />
+            <End Role="cart" EntitySet="carts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_products_product_brands" Association="projectDBModel.FK_products_product_brands">
+            <End Role="product_brands" EntitySet="product_brands" />
+            <End Role="product" EntitySet="products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaction_details_products" Association="projectDBModel.FK_transaction_details_products">
+            <End Role="product" EntitySet="products" />
+            <End Role="transaction_details" EntitySet="transaction_details" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="cart">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="user_id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="product_id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="user" Relationship="projectDBModel.FK_carts_users" FromRole="cart" ToRole="user" />
+          <NavigationProperty Name="product" Relationship="projectDBModel.FK_carts_products" FromRole="cart" ToRole="product" />
+        </EntityType>
+        <EntityType Name="payment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="transactions" Relationship="projectDBModel.FK_transactions_payments" FromRole="payment" ToRole="transaction" />
+        </EntityType>
+        <EntityType Name="product_brands">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="products" Relationship="projectDBModel.FK_products_product_brands" FromRole="product_brands" ToRole="product" />
+        </EntityType>
+        <EntityType Name="transaction_details">
+          <Key>
+            <PropertyRef Name="transaction_id" />
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="transaction_id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="product_id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="transaction" Relationship="projectDBModel.FK_transaction_details_transactons" FromRole="transaction_details" ToRole="transaction" />
+          <NavigationProperty Name="product" Relationship="projectDBModel.FK_transaction_details_products" FromRole="transaction_details" ToRole="product" />
+        </EntityType>
+        <EntityType Name="transaction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="user_id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="transaction_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="payment_id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="payment" Relationship="projectDBModel.FK_transactions_payments" FromRole="transaction" ToRole="payment" />
+          <NavigationProperty Name="transaction_details" Relationship="projectDBModel.FK_transaction_details_transactons" FromRole="transaction" ToRole="transaction_details" />
+          <NavigationProperty Name="user" Relationship="projectDBModel.FK_transactions_users" FromRole="transaction" ToRole="user" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="assurance" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="carts" Relationship="projectDBModel.FK_carts_users" FromRole="user" ToRole="cart" />
+          <NavigationProperty Name="transactions" Relationship="projectDBModel.FK_transactions_users" FromRole="user" ToRole="transaction" />
+          <Property Name="isAdmin" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_carts_users">
+          <End Type="projectDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="projectDBModel.cart" Role="cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="cart">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transactions_payments">
+          <End Type="projectDBModel.payment" Role="payment" Multiplicity="1" />
+          <End Type="projectDBModel.transaction" Role="transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="payment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="transaction">
+              <PropertyRef Name="payment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaction_details_transactons">
+          <End Type="projectDBModel.transaction" Role="transaction" Multiplicity="1" />
+          <End Type="projectDBModel.transaction_details" Role="transaction_details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="transaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="transaction_details">
+              <PropertyRef Name="transaction_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transactions_users">
+          <End Type="projectDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="projectDBModel.transaction" Role="transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="transaction">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="price" Type="Int32" Nullable="false" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="product_brand_id" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="image" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="carts" Relationship="projectDBModel.FK_carts_products" FromRole="product" ToRole="cart" />
+          <NavigationProperty Name="product_brands" Relationship="projectDBModel.FK_products_product_brands" FromRole="product" ToRole="product_brands" />
+          <NavigationProperty Name="transaction_details" Relationship="projectDBModel.FK_transaction_details_products" FromRole="product" ToRole="transaction_details" />
+        </EntityType>
+        <Association Name="FK_carts_products">
+          <End Type="projectDBModel.product" Role="product" Multiplicity="1" />
+          <End Type="projectDBModel.cart" Role="cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="cart">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_products_product_brands">
+          <End Type="projectDBModel.product_brands" Role="product_brands" Multiplicity="1" />
+          <End Type="projectDBModel.product" Role="product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product_brands">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="product">
+              <PropertyRef Name="product_brand_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaction_details_products">
+          <End Type="projectDBModel.product" Role="product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="projectDBModel.transaction_details" Role="transaction_details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="transaction_details">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="projectDBModelStoreContainer" CdmEntityContainer="projectDBEntities">
+          <EntitySetMapping Name="carts">
+            <EntityTypeMapping TypeName="projectDBModel.cart">
+              <MappingFragment StoreEntitySet="carts">
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="payments">
+            <EntityTypeMapping TypeName="projectDBModel.payment">
+              <MappingFragment StoreEntitySet="payments">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="product_brands">
+            <EntityTypeMapping TypeName="projectDBModel.product_brands">
+              <MappingFragment StoreEntitySet="product_brands">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transaction_details">
+            <EntityTypeMapping TypeName="projectDBModel.transaction_details">
+              <MappingFragment StoreEntitySet="transaction_details">
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="transaction_id" ColumnName="transaction_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transactions">
+            <EntityTypeMapping TypeName="projectDBModel.transaction">
+              <MappingFragment StoreEntitySet="transactions">
+                <ScalarProperty Name="assurance" ColumnName="assurance" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="payment_id" ColumnName="payment_id" />
+                <ScalarProperty Name="transaction_date" ColumnName="transaction_date" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="projectDBModel.user">
+              <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="isAdmin" ColumnName="isAdmin" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="products">
+            <EntityTypeMapping TypeName="projectDBModel.product">
+              <MappingFragment StoreEntitySet="products">
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="product_brand_id" ColumnName="product_brand_id" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
